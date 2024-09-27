@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 // components
 import { login } from "../../services/AuthServices";
+import { useToast } from "../../context/ToastContext";
 
 type Inputs = {
   email: string;
@@ -12,6 +13,8 @@ type Inputs = {
 const Login = () => {
   const navigate = useNavigate();
 
+  const {setMessage} = useToast();
+
   const {
     register,
     handleSubmit,
@@ -20,9 +23,9 @@ const Login = () => {
 
   const handleLogin: SubmitHandler<Inputs> = async (payload) => {
    const isLogin =  await login(payload);
+   setMessage("Đăng nhập thành công");
     isLogin && navigate("/dashboard");
   };
-  console.log(errors);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-200">
