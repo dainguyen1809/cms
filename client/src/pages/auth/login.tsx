@@ -1,9 +1,20 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
+// shadcn import
+import { Button } from "@/components/ui/button";
+import { ReloadIcon } from "@radix-ui/react-icons";
+
 // components
 import { login } from "../../services/AuthServices";
 import { useToast } from "../../context/ToastContext";
+
+// redux toolkit
+import { setToast } from "../../redux/slice/toastSlice";
+import { useDispatch, UseDispatch } from "react-redux";
+
+// hooks
+import { useState } from "react";
 
 type Inputs = {
   email: string;
@@ -13,7 +24,13 @@ type Inputs = {
 const Login = () => {
   const navigate = useNavigate();
 
-  const {setMessage} = useToast();
+  // context
+  // const {setMessage} = useToast();
+
+  // redux
+  const dispatch = useDispatch();
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     register,
@@ -22,9 +39,22 @@ const Login = () => {
   } = useForm<Inputs>();
 
   const handleLogin: SubmitHandler<Inputs> = async (payload) => {
-   const isLogin =  await login(payload);
-   setMessage("Đăng nhập thành công", "success");
-    isLogin && navigate("/dashboard");
+    setLoading(true);
+
+
+    //  context
+    //  setMessage("Đăng nhập thành công", "success");
+
+    // redux
+    try {
+      const isLogin = await login(payload);
+      dispatch(setToast({ message: "Đăng nhập thành công", type: "success" }));
+      isLogin && navigate("/dashboard");
+    } catch (error: any) {
+      console.log(error);
+    } finally{
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,7 +76,7 @@ const Login = () => {
               {...register("email", { required: true })}
             />
             {errors.email && (
-              <span className="text-red-500">This field is required</span>
+              <span className="text-red-500">Vui lòng nhập Email</span>
             )}
           </div>
           <div className="mb-4">
@@ -54,7 +84,7 @@ const Login = () => {
               htmlFor="email"
               className="block text-gray-700 text-sm font-bold"
             >
-              Password
+              Mật Khẩu
             </label>
             <input
               type="password"
@@ -63,13 +93,20 @@ const Login = () => {
               {...register("password", { required: true })}
             />
             {errors.password && (
-              <span className="text-red-500">This field is required</span>
+              <span className="text-red-500">Vui lòng nhập Mật Khẩu</span>
             )}
           </div>
           <div className="mb-4">
-            <button className="w-full p-3 transition ease-in-out delay-200 bg-blue-500 hover:bg-blue-700 duration-300 text-white rounded-lg">
+            {/* <button className="w-full p-3 transition ease-in-out delay-200 bg-blue-500 hover:bg-blue-700 duration-300 text-white rounded-lg">
               Đăng nhập
-            </button>
+            </button> */}
+            <Button
+              disabled={loading}
+              className="w-full p-6 mt-5 transition linear delay-200 bg-blue-500 hover:bg-blue-700 duration-300 text-white rounded-lg"
+            >
+              {loading ? <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {loading ? 'Đang xử lý' : 'Đăng nhập'}
+            </Button>
           </div>
           <div className="text-end">Quên mật khẩu</div>
         </form>
