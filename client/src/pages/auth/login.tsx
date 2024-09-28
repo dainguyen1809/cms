@@ -5,6 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../services/AuthServices";
 import { useToast } from "../../context/ToastContext";
 
+// redux toolkit
+import { setToast } from "../../redux/slice/toastSlice";
+import { useDispatch, UseDispatch } from "react-redux";
+
 type Inputs = {
   email: string;
   password: string;
@@ -13,7 +17,11 @@ type Inputs = {
 const Login = () => {
   const navigate = useNavigate();
 
-  const {setMessage} = useToast();
+  // context
+  // const {setMessage} = useToast();
+
+  // redux
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -22,8 +30,13 @@ const Login = () => {
   } = useForm<Inputs>();
 
   const handleLogin: SubmitHandler<Inputs> = async (payload) => {
-   const isLogin =  await login(payload);
-   setMessage("Đăng nhập thành công", "success");
+    const isLogin = await login(payload);
+
+    //  context
+    //  setMessage("Đăng nhập thành công", "success");
+
+    // redux
+    dispatch(setToast({ message: "Đăng nhập thành công", type: "success" }));
     isLogin && navigate("/dashboard");
   };
 
