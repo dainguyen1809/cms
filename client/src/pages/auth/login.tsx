@@ -23,7 +23,7 @@ const Login = () => {
 
   const handleLogin: SubmitHandler<Inputs> = async (payload) => {
    const isLogin =  await login(payload);
-   setMessage("Đăng nhập thành công");
+   setMessage("Đăng nhập thành công", "success");
     isLogin && navigate("/dashboard");
   };
 
