@@ -3,18 +3,17 @@ import { useEffect } from "react"
 
 // components
 import { useToast } from "../../context/ToastContext"
-import { toast } from "react-toastify";
+
+// helpers
+import { showNotify } from "../../helpers/notify";
 
 const dashboard = () => {
 
-  const {message, setMessage} = useToast();
+  const {message, type, setMessage} = useToast();
 
   useEffect(() => {
-    if(message) {
-      toast.success(message);
-      setMessage('');
-    }
-  }, [message, setMessage]);
+    showNotify(message, type, setMessage);
+  }, [message, type, setMessage]);
 
   return (
     <div>Dashboard Layout</div>
