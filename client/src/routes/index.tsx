@@ -1,6 +1,6 @@
 
-import Login from '../pages/auth/login';
-import Dashboard from '../pages/Dashboard'
+import Login from '../pages/Auth/login'
+import Dashboard from '../pages/Dashboard/Dashboard'
 
 export const routes = [
     {
@@ -9,6 +9,10 @@ export const routes = [
     },
     {
         path: 'dashboard',
+        element: <Dashboard />
+    },
+    {
+        path: 'users',
         element: <Dashboard />
     },
 ] 
