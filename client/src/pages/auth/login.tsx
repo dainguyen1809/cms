@@ -7,14 +7,15 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 
 // components
 import { login } from "../../services/AuthServices";
-import { useToast } from "../../context/ToastContext";
+// import { useToast } from "../../context/ToastContext";
 
 // redux toolkit
 import { setToast } from "../../redux/slice/toastSlice";
-import { useDispatch, UseDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 // hooks
 import { useState } from "react";
+import { setAuthLogin } from "@/redux/slice/authSlice";
 
 type Inputs = {
   email: string;
@@ -49,6 +50,7 @@ const Login = () => {
     try {
       const isLogin = await login(payload);
       dispatch(setToast({ message: "Đăng nhập thành công", type: "success" }));
+      dispatch(setAuthLogin(isLogin));
       isLogin && navigate("/dashboard");
     } catch (error: any) {
       console.log(error);

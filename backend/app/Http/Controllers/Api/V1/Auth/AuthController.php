@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\AuthRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
@@ -28,18 +29,21 @@ class AuthController extends Controller
             ], Response::HTTP_UNAUTHORIZED);
         }
 
+        $user = auth()->user();
+
         // set cookie
         $cookie = Cookie::make('access_token', $token, Auth::factory()->getTTL() * 1);
 
-        return $this->respondWithToken($token)->withCookie($cookie);
+        return $this->respondWithToken($token, $user)->withCookie($cookie);
     }
 
 
 
-    protected function respondWithToken($token)
+    protected function respondWithToken($token, $user)
     {
         return response()->json([
             'access_token' => $token,
+            'user' => new UserResource($user),
             'token_type' => 'bearer',
             'expires_in' => Auth::factory()->getTTL() * 60
         ]);
