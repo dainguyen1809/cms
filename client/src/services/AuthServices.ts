@@ -2,9 +2,9 @@
 // import { toast } from "react-toastify";
 
 // utils import
-import axios from "../utils/axios";
-import { handleAxiosError } from "../helpers/helper";
-import { User } from "@/types/types";
+import axios from '../utils/axios';
+import { handleAxiosError } from '../helpers/helper';
+import { User } from '@/types/types';
 
 type LoginPayload = {
   email: string;
@@ -13,7 +13,7 @@ type LoginPayload = {
 
 const login = async (payload: LoginPayload): Promise<User | null> => {
   try {
-    const res = await axios.post("auth/login", {
+    const res = await axios.post('auth/login', {
       email: payload.email,
       password: payload.password,
     });
@@ -28,4 +28,12 @@ const login = async (payload: LoginPayload): Promise<User | null> => {
   }
 };
 
-export { login };
+const fetchUser = async (): Promise<User | null> => {
+  try {
+    const res = await axios.get('auth/profile');
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
+export { login, fetchUser };
